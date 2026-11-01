@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     )
 
     # OpenAI
-    openai_api_key: str = ""
+    openai_api_key: str = "" 
 
     # Qdrant
     qdrant_url: str = ""
