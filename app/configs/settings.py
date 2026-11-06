@@ -24,7 +24,8 @@ class Settings(BaseSettings):
 
     # Collection and models
     collection_name: str = ""
-    embedding_model: str = ""
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    embedding_dimensions: int = 384
     llm_model: str = ""
     llm_temperature: float = 0.0
     chunk_size: int = 1000

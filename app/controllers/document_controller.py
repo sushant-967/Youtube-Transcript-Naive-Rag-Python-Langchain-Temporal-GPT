@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from app.configs.settings import get_settings
 from app.schemas.api import DocumentBatchUploadResponse
+from app.services import ingestion_service
 from app.services.ingestion_service import IngestionService
 from app.utils import get_logger, logger
 
@@ -8,6 +9,7 @@ from app.utils import get_logger, logger
 logger = get_logger(__name__)
 
 router = APIRouter(prefix="/documents", tags=["documents"])
+
 
 @router.post(
     "/upload",
@@ -35,7 +37,7 @@ async def upload_documents(
 
     service = IngestionService()
     try:
-        payload = service.ingest_files_sync(file_pairs)
+        payload = service.ingest_files_at_sync(file_pairs)
     except ValueError as e:
         logger.error(f"Error ingesting files: {e}")
         raise HTTPException(status_code=400, detail=str(e))

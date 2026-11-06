@@ -12,8 +12,6 @@ from app.utils import get_logger
 
 logger = get_logger(__name__)
 
-EMBEDDING_DIMENSIONS = 1536
-
 @lru_cache
 def get_qdrant_client() -> QdrantClient:
     """Get the Qdrant client for the application."""
@@ -45,6 +43,7 @@ class VectorStoreRepository:
         return self._vector_store
 
     def _ensure_collection(self) -> None:
+        settings = get_settings()
         try:
             _info = self.client.get_collection(self.collection_name)
             logger.info(f"Collection {self.collection_name} found with info: {_info}")
@@ -53,7 +52,7 @@ class VectorStoreRepository:
             self.client.create_collection(
                 collection_name = self.collection_name,
                 vectors_config = VectorParams(
-                    size = get_embeddings().dimensions or EMBEDDING_DIMENSIONS,
+                    size = settings.embedding_dimensions,
                     distance = Distance.COSINE,
                 )
             )

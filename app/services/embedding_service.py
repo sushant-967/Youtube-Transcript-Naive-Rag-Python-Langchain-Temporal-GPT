@@ -1,5 +1,6 @@
 from functools import lru_cache
-from langchain_openai import OpenAIEmbeddings
+from langchain_core.embeddings import Embeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 from app.configs.settings import get_settings
 from app.utils import get_logger
@@ -7,8 +8,11 @@ from app.utils import get_logger
 logger = get_logger(__name__)
 
 @lru_cache
-def get_embeddings() -> OpenAIEmbeddings:
-    """Get the embeddings for the application."""
+def get_embeddings() -> Embeddings:
+    """Return the locally executed embedding model used for indexing and search."""
     settings = get_settings()
-    logger.info(f"Initializing OpenAI embeddings with model: {settings.embedding_model}")
-    return OpenAIEmbeddings(model=settings.embedding_model)
+    logger.info(f"Initializing local Hugging Face embeddings with model: {settings.embedding_model}")
+    return HuggingFaceEmbeddings(
+        model_name=settings.embedding_model,
+        encode_kwargs={"normalize_embeddings": True},
+    )
